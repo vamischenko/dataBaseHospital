@@ -9,6 +9,7 @@
 project/boot/
 project/plugins/project/
 target/
+lib/
 *.metadata
 bin/
 tmp/

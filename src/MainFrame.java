@@ -17,15 +17,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Base64;
 
 import javax.swing.DefaultComboBoxModel;
@@ -40,6 +38,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
+import javax.swing.JPasswordField;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
@@ -91,8 +90,7 @@ public class MainFrame {
 	private JTextField DBMS_port_textField;
 	private JTextField DB_name_textField;
 	private JTextField user_name_textField;
-	private JTextField user_password_textField;
-	private JButton connect_button;
+	private JPasswordField user_password_textField;
 
 	private Connection connection = null;
 	private Statement statement;
@@ -111,9 +109,7 @@ public class MainFrame {
 	private String url = "jdbc:postgresql://" + host_ip + ":" + DBMS_port + "/" + DB_name;
 	private JTextField textField_19;
 
-	private String VERSION = "1.4";
-
-	private static final DateFormat df = new SimpleDateFormat("yyyy/mm/dd");
+	private String VERSION = "1.4.1";
 
 	boolean writeTmpFiles;
 
@@ -160,7 +156,7 @@ public class MainFrame {
 		frame.getContentPane().setLayout(null);
 
 		// dialog_view
-		dialog_view = new JDialog(frame, "Просмотр");
+		dialog_view = new JDialog(frame, "\u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440");
 		dialog_view.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowDeactivated(WindowEvent arg0) {
@@ -181,7 +177,7 @@ public class MainFrame {
 		//
 
 		// dialog
-		dialog = new JDialog(frame, "Настройки БД");
+		dialog = new JDialog(frame, "\u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0411\u0414");
 		dialog.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowDeactivated(WindowEvent arg0) {
@@ -190,11 +186,11 @@ public class MainFrame {
 		});
 		dialog.setResizable(false);
 		dialog.setPreferredSize(new Dimension(350, 220));
-		JLabel host_ip_label = new JLabel("IP хоста");
-		JLabel DBMS_port_label = new JLabel("Порт СУБД");
-		JLabel DB_name_label = new JLabel("Имя БД");
-		JLabel user_name_label = new JLabel("Имя пользователя");
-		JLabel user_password_label = new JLabel("Пароль пользователя");
+		JLabel host_ip_label = new JLabel("IP \u0445\u043E\u0441\u0442\u0430");
+		JLabel DBMS_port_label = new JLabel("\u041F\u043E\u0440\u0442 \u0421\u0423\u0411\u0414");
+		JLabel DB_name_label = new JLabel("\u0418\u043C\u044F \u0411\u0414");
+		JLabel user_name_label = new JLabel("\u0418\u043C\u044F \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F");
+		JLabel user_password_label = new JLabel("\u041F\u0430\u0440\u043E\u043B\u044C \u043F\u043E\u043B\u044C\u0437\u043E\u0432\u0430\u0442\u0435\u043B\u044F");
 
 		host_ip_label.setBounds(10, 20, 150, 20);
 		DBMS_port_label.setBounds(10, 45, 150, 20);
@@ -212,7 +208,7 @@ public class MainFrame {
 		DBMS_port_textField = new JTextField(DBMS_port);
 		DB_name_textField = new JTextField(DB_name);
 		user_name_textField = new JTextField(user_name);
-		user_password_textField = new JTextField(user_password);
+		user_password_textField = new JPasswordField(user_password);
 
 		host_ip_textField.setBounds(180, 20, 150, 20);
 		DBMS_port_textField.setBounds(180, 45, 150, 20);
@@ -226,7 +222,7 @@ public class MainFrame {
 		dialog.getContentPane().add(user_name_textField);
 		dialog.getContentPane().add(user_password_textField);
 
-		JButton connect_button = new JButton("Подключиться");
+		JButton connect_button = new JButton("\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0438\u0442\u044C\u0441\u044F");
 		connect_button.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
 				connect();
@@ -251,20 +247,20 @@ public class MainFrame {
 		frame.getContentPane().add(tabbedPane);
 
 		model = new DefaultTableModel();
-		model.addColumn("Id пациента");
-		model.addColumn("Контекст");
-		model.addColumn("Имя");
-		model.addColumn("Фамилия");
-		model.addColumn("Отчество");
-		model.addColumn("Возраст");
-		model.addColumn("Пол");
-		model.addColumn("Стаж");
-		model.addColumn("ПАВ");
-		model.addColumn("Срок ремиссии");
-		model.addColumn("Лек. средства");
-		model.addColumn("Инсульты");
-		model.addColumn("ЧМТ");
-		model.addColumn("Дата теста");
+		model.addColumn("Id \u043F\u0430\u0446\u0438\u0435\u043D\u0442\u0430");
+		model.addColumn("\u041A\u043E\u043D\u0442\u0435\u043A\u0441\u0442");
+		model.addColumn("\u0418\u043C\u044F");
+		model.addColumn("\u0424\u0430\u043C\u0438\u043B\u0438\u044F");
+		model.addColumn("\u041E\u0442\u0447\u0435\u0441\u0442\u0432\u043E");
+		model.addColumn("\u0412\u043E\u0437\u0440\u0430\u0441\u0442");
+		model.addColumn("\u041F\u043E\u043B");
+		model.addColumn("\u0421\u0442\u0430\u0436");
+		model.addColumn("\u041F\u0410\u0412");
+		model.addColumn("\u0421\u0440\u043E\u043A \u0440\u0435\u043C\u0438\u0441\u0441\u0438\u0438");
+		model.addColumn("\u041B\u0435\u043A. \u0441\u0440\u0435\u0434\u0441\u0442\u0432\u0430");
+		model.addColumn("\u0418\u043D\u0441\u0443\u043B\u044C\u0442\u044B");
+		model.addColumn("\u0427\u041C\u0422");
+		model.addColumn("\u0414\u0430\u0442\u0430 \u0442\u0435\u0441\u0442\u0430");
 
 		panel_1 = new Panel();
 		panel_1.addComponentListener(new ComponentAdapter() {
@@ -631,7 +627,7 @@ public class MainFrame {
 		panel_2.add(scrollPane_1);
 
 		tree = new JTree();
-		rootNode = new DefaultMutableTreeNode("Результаты тестов");
+		rootNode = new DefaultMutableTreeNode("\u0420\u0435\u0437\u0443\u043B\u044C\u0442\u0430\u0442\u044B \u0442\u0435\u0441\u0442\u043E\u0432");
 		treeModel = new DefaultTreeModel(rootNode);
 		tree.setModel(treeModel);
 
@@ -695,9 +691,9 @@ public class MainFrame {
 		JMenuItem mntmHelp = new JMenuItem("\u0421\u043F\u0440\u0430\u0432\u043A\u0430");
 		mntmHelp.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String about = "Для подключения:\n1. Файл -> Настройки БД -> Ввести необходимые данные -> Подключиться\n"
-						+ "2. На вкладке Просмотр отобразится содержимое базы данных\n"
-						+ "3. На вкладке Детали отобразится детальная информация выбранной записи БД";
+				String about = "\u0414\u043B\u044F \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044F:\n1. \u0424\u0430\u0439\u043B -> \u041D\u0430\u0441\u0442\u0440\u043E\u0439\u043A\u0438 \u0411\u0414 -> \u0412\u0432\u0435\u0441\u0442\u0438 \u043D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C\u044B\u0435 \u0434\u0430\u043D\u043D\u044B\u0435 -> \u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0438\u0442\u044C\u0441\u044F\n"
+						+ "2. \u041D\u0430 \u0432\u043A\u043B\u0430\u0434\u043A\u0435 \u041F\u0440\u043E\u0441\u043C\u043E\u0442\u0440 \u043E\u0442\u043E\u0431\u0440\u0430\u0437\u0438\u0442\u0441\u044F \u0441\u043E\u0434\u0435\u0440\u0436\u0438\u043C\u043E\u0435 \u0431\u0430\u0437\u044B \u0434\u0430\u043D\u043D\u044B\u0445\n"
+						+ "3. \u041D\u0430 \u0432\u043A\u043B\u0430\u0434\u043A\u0435 \u0414\u0435\u0442\u0430\u043B\u0438 \u043E\u0442\u043E\u0431\u0440\u0430\u0437\u0438\u0442\u0441\u044F \u0434\u0435\u0442\u0430\u043B\u044C\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F \u0432\u044B\u0431\u0440\u0430\u043D\u043D\u043E\u0439 \u0437\u0430\u043F\u0438\u0441\u0438 \u0411\u0414";
 				JOptionPane.showMessageDialog(frame, about);
 			}
 		});
@@ -706,7 +702,7 @@ public class MainFrame {
 		JMenuItem mntmAbout = new JMenuItem("\u041E \u043F\u0440\u043E\u0433\u0440\u0430\u043C\u043C\u0435");
 		mntmAbout.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String about = "Проблемно-ориентированная база данных\nВерсия " + VERSION + "\n2015 год";
+				String about = "\u041F\u0440\u043E\u0431\u043B\u0435\u043C\u043D\u043E-\u043E\u0440\u0438\u0435\u043D\u0442\u0438\u0440\u043E\u0432\u0430\u043D\u043D\u0430\u044F \u0431\u0430\u0437\u0430 \u0434\u0430\u043D\u043D\u044B\u0445\n\u0412\u0435\u0440\u0441\u0438\u044F " + VERSION + "\n2015 \u0433\u043E\u0434";
 				JOptionPane.showMessageDialog(frame, about);
 			}
 		});
@@ -717,8 +713,11 @@ public class MainFrame {
 		if (!file.exists())
 			return;
 		if (file.isDirectory()) {
-			for (File f : file.listFiles()) {
-				recursiveDelete(f);
+			File[] children = file.listFiles();
+			if (children != null) {
+				for (File f : children) {
+					recursiveDelete(f);
+				}
 			}
 		}
 		file.delete();
@@ -727,7 +726,7 @@ public class MainFrame {
 
 	public void update() {
 		if (connection == null) {
-			JOptionPane.showMessageDialog(frame, "Подключение к БД отсутствует !");
+			JOptionPane.showMessageDialog(frame, "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043A \u0411\u0414 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 !");
 			return;
 		}
 
@@ -824,7 +823,7 @@ public class MainFrame {
 	public void detail() {
 		selectedRow = table.getSelectedRow();
 		if (selectedRow == -1) {
-			JOptionPane.showMessageDialog(frame, "Выделите строку !");
+			JOptionPane.showMessageDialog(frame, "\u0412\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u0441\u0442\u0440\u043E\u043A\u0443 !");
 			return;
 		}
 
@@ -848,11 +847,11 @@ public class MainFrame {
 		textField_6.setText(model.getValueAt(selectedRow, 7).toString().trim()); // experience
 		textField_8.setText(model.getValueAt(selectedRow, 8).toString().trim()); // pav
 
-		// remission_period
+		// remission_period (???.???.??.)
 		String[] remission_period = model.getValueAt(selectedRow, 9).toString().trim().split("\\.");
-		textField_9.setText(remission_period[0]);
-		textField_10.setText(remission_period[1]);
-		textField_11.setText(remission_period[2]);
+		textField_9.setText(remission_period.length > 0 ? remission_period[0] : "0");
+		textField_10.setText(remission_period.length > 1 ? remission_period[1] : "0");
+		textField_11.setText(remission_period.length > 2 ? remission_period[2] : "0");
 
 		textArea.setText(model.getValueAt(selectedRow, 10).toString().trim()); // medicaments
 
@@ -873,8 +872,9 @@ public class MainFrame {
 				break;
 			}
 		}
-		// String vremya = model.getValueAt(selectedRow, 13).toString().trim();
-		// formattedTextField
+
+		Object vremyaObj = model.getValueAt(selectedRow, 13);
+		textField.setText(vremyaObj != null ? vremyaObj.toString().trim() : "");
 
 		// clear files list in Tree
 		rootNode.removeAllChildren();
@@ -893,16 +893,15 @@ public class MainFrame {
 			}
 			treeModel.setRoot(rootNode);
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(frame, "Ошибка получения списка тестов !");
+			JOptionPane.showMessageDialog(frame, "\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0441\u043F\u0438\u0441\u043A\u0430 \u0442\u0435\u0441\u0442\u043E\u0432 !");
 			return;
 		}
 	}
 
 	public void export() {
-		// to xls
 		selectedRow = table.getSelectedRow();
 		if (selectedRow == -1) {
-			JOptionPane.showMessageDialog(frame, "Выделите строку !");
+			JOptionPane.showMessageDialog(frame, "\u0412\u044B\u0434\u0435\u043B\u0438\u0442\u0435 \u0441\u0442\u0440\u043E\u043A\u0443 !");
 			return;
 		}
 
@@ -910,14 +909,11 @@ public class MainFrame {
 		String id = model.getValueAt(selectedRow, 0).toString().trim();
 
 		File dir = new File("tmp");
-		// recursiveDelete(dir);
-		dir.mkdir();
+		dir.mkdirs();
 
-		// load files list to Tree
-		try {
-			@SuppressWarnings("resource")
-			Workbook workbook = new XSSFWorkbook();
-			Sheet mainSheet = workbook.createSheet("Основная информация");
+		try (Workbook workbook = new XSSFWorkbook()) {
+			Sheet mainSheet = workbook.createSheet(
+					"\u041E\u0441\u043D\u043E\u0432\u043D\u0430\u044F \u0438\u043D\u0444\u043E\u0440\u043C\u0430\u0446\u0438\u044F");
 
 			for (int i = 0; i < model.getColumnCount(); i++) {
 				Row msRow = mainSheet.createRow(i);
@@ -929,22 +925,26 @@ public class MainFrame {
 
 			String selectFileStat = String.format("SELECT filename,filecontent FROM tests WHERE patient_id=%s", id);
 
-			ResultSet rs;
 			statement = connection.createStatement();
-			rs = statement.executeQuery(selectFileStat);
+			ResultSet rs = statement.executeQuery(selectFileStat);
 
 			while (rs.next()) {
-				String filename = rs.getObject(1).toString();
-				filename = filename.substring(filename.lastIndexOf("\\") + 1, filename.lastIndexOf("."));
+				String pathFromDb = rs.getObject(1).toString();
+				String baseName = new File(pathFromDb).getName();
+				int dot = baseName.lastIndexOf('.');
+				String filename = dot > 0 ? baseName.substring(0, dot) : baseName;
+				if (filename.length() > 31) {
+					filename = filename.substring(0, 31);
+				}
+
 				byte[] decodedBuffer = Base64.getMimeDecoder().decode(rs.getObject(2).toString());
-				String filecontent = new String(decodedBuffer, "UTF-8");
+				String filecontent = new String(decodedBuffer, StandardCharsets.UTF_8);
 
 				if (writeTmpFiles) {
-					File file = new File(String.format("tmp\\~%s.dat", filename));
-					DataOutputStream dos;
-					dos = new DataOutputStream(new FileOutputStream(file));
-					dos.write(decodedBuffer);
-					dos.close();
+					File tmpDat = new File(dir, "~" + filename + ".dat");
+					try (DataOutputStream dos = new DataOutputStream(new FileOutputStream(tmpDat))) {
+						dos.write(decodedBuffer);
+					}
 				}
 
 				Sheet additionalSheet = workbook.createSheet(filename);
@@ -959,13 +959,13 @@ public class MainFrame {
 				}
 			}
 
-			FileOutputStream out = new FileOutputStream(String.format("tmp\\%s.xlsx", id));
-			workbook.write(out);
-			out.close();
+			File outFile = new File(dir, id + ".xlsx");
+			try (FileOutputStream out = new FileOutputStream(outFile)) {
+				workbook.write(out);
+			}
 
 		} catch (SQLException | IOException e) {
-			JOptionPane.showMessageDialog(frame, "Ошибка получения списка тестов !");
-			return;
+			JOptionPane.showMessageDialog(frame, "\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u0441\u043F\u0438\u0441\u043A\u0430 \u0442\u0435\u0441\u0442\u043E\u0432 !");
 		}
 	}
 
@@ -979,18 +979,18 @@ public class MainFrame {
 			url = "jdbc:postgresql://" + host_ip_textField.getText() + ":" + DBMS_port_textField.getText() + "/"
 					+ DB_name_textField.getText();
 			user_name = user_name_textField.getText();
-			user_password = user_password_textField.getText();
+			user_password = new String(user_password_textField.getPassword());
 
 			connection = DriverManager.getConnection(url, user_name, user_password);
 		} catch (ClassNotFoundException e) {
-			JOptionPane.showMessageDialog(frame, "Ошибка подключения !");
+			JOptionPane.showMessageDialog(frame, "\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044F !");
 			return;
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(frame, "Ошибка подключения !");
+			JOptionPane.showMessageDialog(frame, "\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u044F !");
 			return;
 		}
 
-		JOptionPane.showMessageDialog(frame, "Успешно подключено !");
+		JOptionPane.showMessageDialog(frame, "\u0423\u0441\u043F\u0435\u0448\u043D\u043E \u043F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u043E !");
 		dialog.setVisible(false);
 		frame.setEnabled(true);
 		update();
@@ -998,30 +998,30 @@ public class MainFrame {
 
 	public void add() {
 		if (connection == null) {
-			JOptionPane.showMessageDialog(frame, "Подключение к БД отсутствует !");
+			JOptionPane.showMessageDialog(frame, "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043A \u0411\u0414 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 !");
 			return;
 		}
 
 		if (textField_5.getText().length() == 0 || textField_1.getText().length() == 0
 				|| textField_2.getText().length() == 0 || textField_3.getText().length() == 0
 				|| textField_4.getText().length() == 0 || comboBox.getSelectedItem().toString().length() == 0) {
-			JOptionPane.showMessageDialog(frame, "Заполните основные данные !");
+			JOptionPane.showMessageDialog(frame, "\u0417\u0430\u043F\u043E\u043B\u043D\u0438\u0442\u0435 \u043E\u0441\u043D\u043E\u0432\u043D\u044B\u0435 \u0434\u0430\u043D\u043D\u044B\u0435 !");
 			return;
 		}
 
 		String insertStat = String.format(
-				"INSERT INTO patients (context,name,surname,patronymic,age,gender,experience,pav,remission_period,insult,tbi,medicaments,vremya) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s.%s.%s','%s','%s','%s','%s','%s') ",
+				"INSERT INTO patients (context,name,surname,patronymic,age,gender,experience,pav,remission_period,insult,tbi,medicaments,vremya) VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s.%s.%s','%s','%s','%s','%s') ",
 				textField_5.getText(), textField_2.getText(), textField_1.getText(), textField_3.getText(),
 				textField_4.getText(), comboBox.getSelectedItem().toString(), textField_6.getText(),
 				textField_8.getText(), textField_9.getText(), textField_10.getText(), textField_11.getText(),
 				comboBox_1.getSelectedItem().toString(), comboBox_2.getSelectedItem().toString(), textArea.getText(),
-				textField.getText(), textField_7.getText());
+				textField.getText());
 
 		try {
 			statement = connection.createStatement();
 			statement.executeUpdate(insertStat);
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(frame, "Ошибка выполнения запроса !");
+			JOptionPane.showMessageDialog(frame, "\u041E\u0448\u0438\u0431\u043A\u0430 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044F \u0437\u0430\u043F\u0440\u043E\u0441\u0430 !");
 			return;
 		}
 
@@ -1036,13 +1036,13 @@ public class MainFrame {
 			maxID = (int) rs.getObject(1);
 
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(frame, "Ошибка получения максимального индекса !");
+			JOptionPane.showMessageDialog(frame, "\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u043E\u043B\u0443\u0447\u0435\u043D\u0438\u044F \u043C\u0430\u043A\u0441\u0438\u043C\u0430\u043B\u044C\u043D\u043E\u0433\u043E \u0438\u043D\u0434\u0435\u043A\u0441\u0430 !");
 			return;
 		}
 
 		int childCount = rootNode.getChildCount();
 		if (childCount == 0) {
-			JOptionPane.showMessageDialog(frame, "Тесты не добавлены !");
+			JOptionPane.showMessageDialog(frame, "\u0422\u0435\u0441\u0442\u044B \u043D\u0435 \u0434\u043E\u0431\u0430\u0432\u043B\u0435\u043D\u044B !");
 			return;
 		}
 
@@ -1070,7 +1070,7 @@ public class MainFrame {
 				statement = connection.createStatement();
 				statement.executeUpdate(insertFileStat);
 			} catch (SQLException e) {
-				JOptionPane.showMessageDialog(frame, "Ошибка выполнения запроса !");
+				JOptionPane.showMessageDialog(frame, "\u041E\u0448\u0438\u0431\u043A\u0430 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044F \u0437\u0430\u043F\u0440\u043E\u0441\u0430 !");
 				e.printStackTrace();
 				return;
 			}
@@ -1079,7 +1079,7 @@ public class MainFrame {
 
 	public void change() {
 		if (connection == null) {
-			JOptionPane.showMessageDialog(frame, "Подключение к БД отсутствует !");
+			JOptionPane.showMessageDialog(frame, "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043A \u0411\u0414 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 !");
 			return;
 		}
 
@@ -1095,7 +1095,7 @@ public class MainFrame {
 			statement = connection.createStatement();
 			statement.executeUpdate(changeStat);
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(frame, "Ошибка выполнения запроса !");
+			JOptionPane.showMessageDialog(frame, "\u041E\u0448\u0438\u0431\u043A\u0430 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044F \u0437\u0430\u043F\u0440\u043E\u0441\u0430 !");
 		}
 
 		int k = 0;
@@ -1177,7 +1177,7 @@ public class MainFrame {
 						statement = connection.createStatement();
 						statement.executeUpdate(insertFileStat);
 					} catch (SQLException e) {
-						JOptionPane.showMessageDialog(frame, "Ошибка выполнения запроса !");
+						JOptionPane.showMessageDialog(frame, "\u041E\u0448\u0438\u0431\u043A\u0430 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044F \u0437\u0430\u043F\u0440\u043E\u0441\u0430 !");
 						e.printStackTrace();
 						return;
 					}
@@ -1210,7 +1210,7 @@ public class MainFrame {
 							statement = connection.createStatement();
 							statement.executeUpdate(insertFileStat);
 						} catch (SQLException e) {
-							JOptionPane.showMessageDialog(frame, "Ошибка выполнения запроса !");
+							JOptionPane.showMessageDialog(frame, "\u041E\u0448\u0438\u0431\u043A\u0430 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044F \u0437\u0430\u043F\u0440\u043E\u0441\u0430 !");
 							e.printStackTrace();
 							return;
 						}
@@ -1225,7 +1225,7 @@ public class MainFrame {
 
 	public void delete() {
 		if (connection == null) {
-			JOptionPane.showMessageDialog(frame, "Подключение к БД отсутствует !");
+			JOptionPane.showMessageDialog(frame, "\u041F\u043E\u0434\u043A\u043B\u044E\u0447\u0435\u043D\u0438\u0435 \u043A \u0411\u0414 \u043E\u0442\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442 !");
 			return;
 		}
 
@@ -1237,7 +1237,7 @@ public class MainFrame {
 			statement.executeUpdate(deleteFileStat);
 			statement.executeUpdate(deleteStat);
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(frame, "Ошибка выполнения запроса !");
+			JOptionPane.showMessageDialog(frame, "\u041E\u0448\u0438\u0431\u043A\u0430 \u0432\u044B\u043F\u043E\u043B\u043D\u0435\u043D\u0438\u044F \u0437\u0430\u043F\u0440\u043E\u0441\u0430 !");
 			e.printStackTrace();
 		}
 	}
@@ -1260,19 +1260,19 @@ public class MainFrame {
 					// filename.substring(filename.lastIndexOf("\\")+1,
 					// filename.lastIndexOf("."));
 					byte[] decodedBuffer = Base64.getMimeDecoder().decode(rs.getObject(2).toString());
-					String filecontent = new String(decodedBuffer, "UTF-8");
+					String filecontent = new String(decodedBuffer, StandardCharsets.UTF_8);
 					frame.setEnabled(false);
 					dialog_view.setVisible(true);
 					textArea_dialog_view.setText(filecontent);
-				} catch (SQLException | UnsupportedEncodingException e) {
+				} catch (SQLException e) {
 					e.printStackTrace();
-					JOptionPane.showMessageDialog(frame, "Ошибка просмотра файла !");
+					JOptionPane.showMessageDialog(frame, "\u041E\u0448\u0438\u0431\u043A\u0430 \u043F\u0440\u043E\u0441\u043C\u043E\u0442\u0440\u0430 \u0444\u0430\u0439\u043B\u0430 !");
 				}
 			} else {
-				JOptionPane.showMessageDialog(frame, "Это корень !");
+				JOptionPane.showMessageDialog(frame, "\u042D\u0442\u043E \u043A\u043E\u0440\u0435\u043D\u044C !");
 			}
 		} else {
-			JOptionPane.showMessageDialog(frame, "Необходимо выделить файл !");
+			JOptionPane.showMessageDialog(frame, "\u041D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C\u043E \u0432\u044B\u0434\u0435\u043B\u0438\u0442\u044C \u0444\u0430\u0439\u043B !");
 		}
 	}
 
@@ -1293,10 +1293,10 @@ public class MainFrame {
 			if (!selectedTreeItem.isRoot()) {
 				treeModel.removeNodeFromParent(selectedTreeItem);
 			} else {
-				JOptionPane.showMessageDialog(frame, "Нельзя удалять корень !");
+				JOptionPane.showMessageDialog(frame, "\u041D\u0435\u043B\u044C\u0437\u044F \u0443\u0434\u0430\u043B\u044F\u0442\u044C \u043A\u043E\u0440\u0435\u043D\u044C !");
 			}
 		} else {
-			JOptionPane.showMessageDialog(frame, "Необходимо выделить файл !");
+			JOptionPane.showMessageDialog(frame, "\u041D\u0435\u043E\u0431\u0445\u043E\u0434\u0438\u043C\u043E \u0432\u044B\u0434\u0435\u043B\u0438\u0442\u044C \u0444\u0430\u0439\u043B !");
 		}
 	}
 
